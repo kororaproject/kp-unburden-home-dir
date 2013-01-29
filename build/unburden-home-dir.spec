@@ -2,7 +2,7 @@
 
 Name:           unburden-home-dir
 Version:        0.3.2
-Release:        1.git%{git}%{?dist}
+Release:        1.git%{git}%{?dist}.1
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -23,6 +23,7 @@ removed instead of moved.
 %prep
 %setup -q
 %patch0 -p1
+sed -i s/sed/#sed/ Makefile
 
 %install
 DESTDIR=%{buildroot} make install
@@ -40,13 +41,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc
 %{_sysconfdir}/X11/Xsession.d/95unburden-home-dir
 %{_sysconfdir}/unburden-home-dir
-%{_sysconfdir}/unburden-home-dir.list
 %{_bindir}/unburden-home-dir
 %{_defaultdocdir}/%{name}/README
 %{_defaultdocdir}/%{name}/copyright
 %{_defaultdocdir}/%{name}/examples/unburden-home-dir
 %{_defaultdocdir}/%{name}/examples/unburden-home-dir.list
 %{_mandir}/man1/unburden-home-dir.1.gz
+%config(noreplace) %{_sysconfdir}/unburden-home-dir.list
 
 %changelog
 * Sat Jan 19 2013 Chris Smart <csmart@kororaproject.org> - 0.1-1
