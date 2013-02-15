@@ -1,8 +1,8 @@
-%global git fc96b59
+%global git ca5dc5c
 
 Name:           unburden-home-dir
 Version:        0.3.2
-Release:        2.git%{git}%{?dist}
+Release:        3.git%{git}%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -27,6 +27,7 @@ sed -i s/sed/#sed/ Makefile
 
 %install
 DESTDIR=%{buildroot} make install
+sed -i 's/^m D .cache cache/#m D .cache cache/g' %{buildroot}%{_sysconfdir}/unburden-home-dir.list
 
 mkdir -p %{buildroot}%{_defaultdocdir}/%{name}/examples
 mkdir -p %{buildroot}%{_sysconfdir}/default
@@ -54,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/unburden-home-dir.1.gz
 
 %changelog
+* Sat Feb 16 2013 Chris Smart <csmart@kororaproject.org> - 0.3.2-3
+- Remove .cache for now to work around issue where terminal non-responsive if unburden disabled and not reburdened.
+
 * Sun Feb 03 2013 Chris Smart <csmart@kororaproject.org> - 0.3.2-2
 - Unburden wasn't starting due to missing config option and misplaced config file.
 
