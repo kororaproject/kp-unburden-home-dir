@@ -1,4 +1,4 @@
-%global git ca5dc5c
+%global git 27963fe
 
 Name:           unburden-home-dir
 Version:        0.3.2
