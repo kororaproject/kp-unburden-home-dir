@@ -1,5 +1,5 @@
 diff --git a/bin/unburden-home-dir b/bin/unburden-home-dir
-index 738c26c..ae42b56 100755
+index 9b03203..0042bd0 100755
 --- a/bin/unburden-home-dir
 +++ b/bin/unburden-home-dir
 @@ -44,14 +44,12 @@ my $BASENAME = 'unburden-home-dir';
@@ -87,7 +87,7 @@ index 738c26c..ae42b56 100755
  # Parse command line options
  getopts('hnufFb:c:C:l:L:', \%OPTIONS);
  
-@@ -153,36 +213,18 @@ for (keys %OPTIONS) {
+@@ -153,7 +213,7 @@ foreach my $key (keys %OPTIONS) {
  foreach my $configfile (@CONFFILES) {
      if ( -e $configfile ) {
          $CONFIG = { %$CONFIG,
@@ -96,17 +96,7 @@ index 738c26c..ae42b56 100755
      }
  }
  
- # Fix some values
- $UID =~ s/\s+//gs;
- 
--# Remove quotes and line-feeds from values
--foreach my $key (keys %$CONFIG) {
--    chomp($CONFIG->{$key});
--    $CONFIG->{$key} =~ s/^([\'\"])(.*)\1$/$2/;
--}
--
- # Set proper umask when creating files or directories. Save current
- # umask before.
+@@ -171,18 +231,6 @@ foreach my $key (keys %$CONFIG) {
  my $OLDUMASK = umask();
  umask(077);
  
@@ -115,9 +105,9 @@ index 738c26c..ae42b56 100755
 -    archive => 1,
 -    verbose => 1,
 -    outfun => sub {
--        my $_ = shift;
--        chomp;
--        say unless m(^sent |^total size|^\s*$);
+-        my $output = shift;
+-        chomp($output);
+-        say $output unless $output =~ m(^sent |^total size|^\s*$);
 -    },
 -    errfun => sub { chomp; warn "$_[0]\n"; },
 -});
@@ -125,7 +115,7 @@ index 738c26c..ae42b56 100755
  # Check for lsof in search path
  my $which_lsof = which('lsof');
  if (!$which_lsof) {
-@@ -211,10 +253,7 @@ sub move ($$) {
+@@ -211,10 +259,7 @@ sub move ($$) {
              $from .= '/' unless $from =~ m(/$);
              $to .= '/' unless $to =~ m(/$);
  
@@ -137,7 +127,7 @@ index 738c26c..ae42b56 100755
              rmtree($from);
          } else {
              my $rc = system(qw(mv -v), $from, $to);
-@@ -347,7 +386,7 @@ sub files_in_use {
+@@ -347,7 +392,7 @@ sub files_in_use {
      my $lsof_output = undef;
  
      if (-d $item) {
@@ -146,7 +136,7 @@ index 738c26c..ae42b56 100755
      } elsif (-f _) {
          $lsof_output = `lsof -F c '$item'`;
      } else {
-@@ -632,6 +671,7 @@ sub exchange_wildcards_and_replacements {
+@@ -632,6 +677,7 @@ sub exchange_wildcards_and_replacements {
      return ($wildcard, $replacement);
  }
  
