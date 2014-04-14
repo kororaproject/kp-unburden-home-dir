@@ -1,8 +1,8 @@
-%global git 9402c6d
+%global git 8f662e6
 
 Name:           unburden-home-dir
 Version:        0.3.2.2
-Release:        1.git%{git}%{?dist}
+Release:        2.git%{git}%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -11,7 +11,7 @@ URL:            https://github.com/xtaran/unburden-home-dir
 Source0:        %{name}-%{version}.tar.gz
 Patch0:         0001-reduced-dependancies.patch
 
-Requires:       mbuffer, perl-Modern-Perl, perl-File-BaseDir, perl-File-Which
+Requires:       perl-Modern-Perl, perl-File-BaseDir, perl-File-Which
 
 %description
 unburden-home-dir allows users to move cache files from browsers, etc. 
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/unburden-home-dir.1.gz
 
 %changelog
+* Mon Apr 14 2014 Ian Firns <firnsy@kororaproject.org> - 0.3.2.2-2
+- Updated to latest upstream which drops dependancy for mbuffer.
+
 * Thu Sep 26 2013 Ian Firns <firnsy@kororaproject.org> - 0.3.2.2-1
 - Updated to upstream and tweaked patch to compile.
 

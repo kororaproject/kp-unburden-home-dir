@@ -127,20 +127,3 @@ index 9b03203..0042bd0 100755
              rmtree($from);
          } else {
              my $rc = system(qw(mv -v), $from, $to);
-@@ -347,7 +392,7 @@ sub files_in_use {
-     my $lsof_output = undef;
- 
-     if (-d $item) {
--        $lsof_output = `find '$item' -print0 | buffer | xargs -0 lsof -F c`;
-+        $lsof_output = `find '$item' -print0 | mbuffer -q | xargs -0 lsof -F c`;
-     } elsif (-f _) {
-         $lsof_output = `lsof -F c '$item'`;
-     } else {
-@@ -632,6 +677,7 @@ sub exchange_wildcards_and_replacements {
-     return ($wildcard, $replacement);
- }
- 
-+
- # Main loop over all items in list files
- for my $list (@LISTFILES) {
-     next unless -r $list;
