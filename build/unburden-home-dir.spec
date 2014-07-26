@@ -1,8 +1,8 @@
-%global git 8f662e6
+%global git 2745ccd
 
 Name:           unburden-home-dir
-Version:        0.3.2.2
-Release:        2.git%{git}%{?dist}
+Version:        0.3.2.3
+Release:        1.git%{git}%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/unburden-home-dir.1.gz
 
 %changelog
+* Sat Jul 26 2014 Ian Firns <firnsy@kororaproject.org> - 0.3.2.3-1
+- Updated to latest upstream.
+
 * Mon Apr 14 2014 Ian Firns <firnsy@kororaproject.org> - 0.3.2.2-2
 - Updated to latest upstream which drops dependancy for mbuffer.
 

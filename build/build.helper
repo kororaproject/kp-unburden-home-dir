@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function build_pre_build {
-  _TARBALL="${KP_NAME}-${KP_VERSION}.tar.gz"
+  _TARBALL="${KP_NAME}-${_SPEC_VERSION}.tar.gz"
 
   if [ ! -f "${WORKING_PACKAGES_DIR}/${KP_NAME}/build/sources/${_TARBALL}" ]
   then
@@ -13,7 +13,7 @@ function build_pre_build {
     # archive
     _TMP=$(mktemp --tmpdir -d "${KP_NAME}-build.XXXXXX")
 
-    git archive --format tar.gz --prefix="${KP_NAME}-${KP_VERSION}/" -o "../build/sources/${KP_NAME}-${KP_VERSION}.tar.gz" HEAD
+    git archive --format tar.gz --prefix="${KP_NAME}-${_SPEC_VERSION}/" -o "../build/sources/${KP_NAME}-${_SPEC_VERSION}.tar.gz" HEAD
     gitver=$(git rev-parse --short HEAD)
     sed -i s/^%global\ git.*/%global\ git\ ${gitver}/ ../build/${KP_BUILD_SPEC}
     _popd
