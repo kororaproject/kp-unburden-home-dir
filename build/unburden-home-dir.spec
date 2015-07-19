@@ -2,7 +2,7 @@
 
 Name:           unburden-home-dir
 Version:        0.3.2.3
-Release:        1.git%{git}%{?dist}
+Release:        2.git%{git}%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -24,37 +24,31 @@ removed instead of moved.
 %setup -q
 %patch0 -p1
 sed -i s/sed/#sed/ Makefile
+sed -i -e 's@/Xsession.d@/xinit/xinitrc.d@g' Makefile
+mv README.md README
+cp -R etc/ examples/
 
 %install
-DESTDIR=%{buildroot} make install
+%{make_install}
 sed -i 's/^m D .cache cache/#m D .cache cache/g' %{buildroot}%{_sysconfdir}/unburden-home-dir.list
 
-mkdir -p %{buildroot}%{_defaultdocdir}/%{name}/examples
 mkdir -p %{buildroot}%{_sysconfdir}/default
-mkdir -p %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc.d
-mv %{buildroot}%{_sysconfdir}/X11/Xsession.d/95unburden-home-dir %{buildroot}%{_sysconfdir}/X11/xinit/xinitrc.d/95unburden-home-dir
-install -m 0644 README.md %{buildroot}%{_defaultdocdir}/%{name}/README
-install -m 0644 debian/copyright %{buildroot}%{_defaultdocdir}/%{name}/copyright
-install -m 0644 etc/* %{buildroot}%{_defaultdocdir}/%{name}/examples/
 echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildroot}%{_sysconfdir}/default/unburden-home-dir
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%doc
+%doc README examples/
+%license COPYING
 %{_sysconfdir}/X11/xinit/xinitrc.d/95unburden-home-dir
 %config(noreplace) %{_sysconfdir}/default/unburden-home-dir
 %config(noreplace) %{_sysconfdir}/unburden-home-dir
 %config(noreplace) %{_sysconfdir}/unburden-home-dir.list
 %{_bindir}/unburden-home-dir
-%{_defaultdocdir}/%{name}/README
-%{_defaultdocdir}/%{name}/copyright
-%{_defaultdocdir}/%{name}/examples/unburden-home-dir
-%{_defaultdocdir}/%{name}/examples/unburden-home-dir.list
-%{_mandir}/man1/unburden-home-dir.1.gz
+%{_mandir}/man1/unburden-home-dir.1.*
 
 %changelog
+* Sun Jul 19 2015 Leigh Scott <leigh123linux@googlemail.com> - 0.3.2.3-2.git2745ccd
+- spec file clean up
+
 * Sat Jul 26 2014 Ian Firns <firnsy@kororaproject.org> - 0.3.2.3-1
 - Updated to latest upstream.
 
