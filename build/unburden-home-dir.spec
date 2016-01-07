@@ -1,8 +1,8 @@
-%global git 2745ccd
+%global git ee013a1
 
 Name:           unburden-home-dir
-Version:        0.3.2.3
-Release:        2.git%{git}%{?dist}
+Version:        0.3.3
+Release:        1.git%{git}%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -14,10 +14,10 @@ Patch0:         0001-reduced-dependancies.patch
 Requires:       perl-Modern-Perl, perl-File-BaseDir, perl-File-Which
 
 %description
-unburden-home-dir allows users to move cache files from browsers, etc. 
+unburden-home-dir allows users to move cache files from browsers, etc.
 off their home directory, i.e. on a local harddisk or tmpfs and replace
 them with a symbolic link to the new location (e.g. on /tmp/ ) upon
-login. Optionally the contents of the directories and files can be 
+login. Optionally the contents of the directories and files can be
 removed instead of moved.
 
 %prep
@@ -46,6 +46,10 @@ echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildr
 %{_mandir}/man1/unburden-home-dir.1.*
 
 %changelog
+* Thu Jan  5 2016 Ian Firns <firnsy@kororaproject.org> - 0.3.3-1.gitd4e2658
+- Updated to latest upstream stable and reduced patch size with File::Touch
+  now packaged.
+
 * Sun Jul 19 2015 Leigh Scott <leigh123linux@googlemail.com> - 0.3.2.3-2.git2745ccd
 - spec file clean up
 

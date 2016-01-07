@@ -1,8 +1,8 @@
 diff --git a/bin/unburden-home-dir b/bin/unburden-home-dir
-index 9b03203..0042bd0 100755
+index 82fde63..4e3f40c 100755
 --- a/bin/unburden-home-dir
 +++ b/bin/unburden-home-dir
-@@ -44,14 +44,12 @@ my $BASENAME = 'unburden-home-dir';
+@@ -46,14 +46,13 @@ my $BASENAME = 'unburden-home-dir';
  my $LISTSUFFIX = 'list';
  
  # Load Modules
@@ -11,19 +11,19 @@ index 9b03203..0042bd0 100755
  use File::Path qw(mkpath rmtree);
  use File::Basename;
  use File::BaseDir qw(config_home);
--use File::Touch;
+ use File::Touch;
 -use File::Rsync;
  use File::Which;
 +use IO::File;
  use IO::Handle;
  use Data::Dumper;
  
-@@ -111,6 +109,68 @@ Options without parameters:
+@@ -113,6 +112,56 @@ Options without parameters:
      return;
  }
  
 +#
-+# BEGIN: Non-packaged lighter-weight implementations of read_config_file, touch and rsync
++# BEGIN: Non-packaged lighter-weight implementations of read_config_file and rsync
 +#
 +
 +# Read configuration file
@@ -54,18 +54,6 @@ index 9b03203..0042bd0 100755
 +  return $config;
 +}
 +
-+# Touch files and return the count of touched files.
-+sub touch($) {
-+  my @files = @_;
-+
-+  my $count = 0;
-+
-+  foreach my $f ( @files ) {
-+    system 'touch', $f;
-+    $count++ unless( $? >> 8 );
-+  }
-+}
-+
 +# Perform an verbose archive via rsync
 +sub rsync($$) {
 +  my ($from, $to) = @_;
@@ -85,18 +73,18 @@ index 9b03203..0042bd0 100755
 +
 +
  # Parse command line options
- getopts('hnufFb:c:C:l:L:', \%OPTIONS);
+ getopts('hnuf:Fb:c:C:l:L:', \%OPTIONS);
  
-@@ -153,7 +213,7 @@ foreach my $key (keys %OPTIONS) {
+@@ -155,7 +204,7 @@ foreach my $key (keys %OPTIONS) {
  foreach my $configfile (@CONFFILES) {
      if ( -e $configfile ) {
-         $CONFIG = { %$CONFIG,
--                    %{Config::File::read_config_file($configfile)} };
-+                    %{read_config_file($configfile)} };
-     }
- }
- 
-@@ -171,18 +231,6 @@ foreach my $key (keys %$CONFIG) {
+         # Workaround RT#98542 in Config::File 1.50 and earlier
+-        my $cf = Config::File::read_config_file($configfile);
++        my $cf = read_config_file($configfile);
+         if (defined($cf)) {
+             $CONFIG = { %$CONFIG, %$cf };
+         }
+@@ -176,22 +225,6 @@ foreach my $key (keys %$CONFIG) {
  my $OLDUMASK = umask();
  umask(077);
  
@@ -109,15 +97,19 @@ index 9b03203..0042bd0 100755
 -        chomp($output);
 -        say $output unless $output =~ m(^sent |^total size|^\s*$);
 -    },
--    errfun => sub { chomp; warn "$_[0]\n"; },
+-    errfun => sub {
+-        # uncoverable subroutine
+-        chomp;          # uncoverable statement
+-        warn "$_[0]\n"; # uncoverable statement
+-    },
 -});
 -
  # Check for lsof in search path
  my $which_lsof = which('lsof');
  if (!$which_lsof) {
-@@ -211,10 +259,7 @@ sub move ($$) {
-             $from .= '/' unless $from =~ m(/$);
-             $to .= '/' unless $to =~ m(/$);
+@@ -220,10 +253,7 @@ sub move {
+             $from .= '/';
+             $to .= '/';
  
 -            my $rc = $rsync->exec({
 -                src => $from,
