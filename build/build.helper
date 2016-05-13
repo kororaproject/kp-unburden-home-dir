@@ -13,8 +13,8 @@ function build_pre_build {
     # archive
     _TMP=$(mktemp --tmpdir -d "${KP_NAME}-build.XXXXXX")
 
-    git archive --format tar.gz --prefix="${KP_NAME}-${_SPEC_VERSION}/" -o "../build/sources/${KP_NAME}-${_SPEC_VERSION}.tar.gz" ${_SPEC_VERSION}
-    gitver=$(git rev-parse --short ${_SPEC_VERSION})
+    git archive --format tar.gz --prefix="${KP_NAME}-${_SPEC_VERSION}/" -o "../build/sources/${KP_NAME}-${_SPEC_VERSION}.tar.gz" ${__git}
+    gitver=$(git rev-parse --short ${__git})
 
     sed -i s/^%global\ git.*/%global\ git\ ${gitver}/ ../build/${KP_BUILD_SPEC}
     _popd
