@@ -1,17 +1,18 @@
-%global git ee013a190e33
-
 Name:           unburden-home-dir
-Version:        0.3.3
-Release:        1.git%{git}%{?dist}
+Version:        0.4.0.1
+Release:        1%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
 License:        GPLv2
 URL:            https://github.com/xtaran/unburden-home-dir
-Source0:        %{name}-%{version}.tar.gz
+Source0:        https://github.com/xtaran/unburden-home-dir/archive/%{version}.tar.gz
 Patch0:         0001-reduced-dependancies.patch
 
-Requires:       perl-Modern-Perl, perl-File-BaseDir, perl-File-Which
+BuildRequires:  rubygem-ronn
+Requires:       perl-Modern-Perl
+Requires:       perl-File-BaseDir
+Requires:       perl-File-Which
 
 %description
 unburden-home-dir allows users to move cache files from browsers, etc.
@@ -21,7 +22,7 @@ login. Optionally the contents of the directories and files can be
 removed instead of moved.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 %patch0 -p1
 sed -i s/sed/#sed/ Makefile
 sed -i -e 's@/Xsession.d@/xinit/xinitrc.d@g' Makefile
@@ -38,15 +39,20 @@ echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildr
 %files
 %doc README examples/
 %license COPYING
+%{_sysconfdir}/X11/xinit/xinitrc.d/25unburden-home-dir-xdg
 %{_sysconfdir}/X11/xinit/xinitrc.d/95unburden-home-dir
 %config(noreplace) %{_sysconfdir}/default/unburden-home-dir
 %config(noreplace) %{_sysconfdir}/unburden-home-dir
 %config(noreplace) %{_sysconfdir}/unburden-home-dir.list
 %{_bindir}/unburden-home-dir
 %{_mandir}/man1/unburden-home-dir.1.*
+%{_datadir}/unburden-home-dir/common.sh
 
 %changelog
-* Thu Jan  5 2016 Ian Firns <firnsy@kororaproject.org> - 0.3.3-1.gitd4e2658
+* Fri Nov 25 2016 Ian Firns <firnsy@kororaproject.org> - 0.4.0.1-1
+- Updated to latest upstream.
+
+* Tue Jan  5 2016 Ian Firns <firnsy@kororaproject.org> - 0.3.3-1.gitd4e2658
 - Updated to latest upstream stable and reduced patch size with File::Touch
   now packaged.
 
@@ -70,4 +76,3 @@ echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildr
 
 * Sat Jan 19 2013 Chris Smart <csmart@kororaproject.org> - 0.3.2-1
 - Initial spec.
-
