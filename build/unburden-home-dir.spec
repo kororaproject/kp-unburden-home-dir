@@ -1,6 +1,6 @@
 Name:           unburden-home-dir
 Version:        0.4.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -49,6 +49,9 @@ echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildr
 %{_datadir}/unburden-home-dir/common.sh
 
 %changelog
+* Sun Dec 18 2016 Ian Firns <firnsy@kororaproject.org> - 0.4.0.1-2
+- Fixed missing String::Expand utilities.
+
 * Fri Nov 25 2016 Ian Firns <firnsy@kororaproject.org> - 0.4.0.1-1
 - Updated to latest upstream.
 
