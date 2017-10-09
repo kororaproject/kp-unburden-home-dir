@@ -1,6 +1,6 @@
 Name:           unburden-home-dir
 Version:        0.4.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Script to move cache files in homedir to tmpfs
 
 Group:          System Environment/Base
@@ -8,10 +8,12 @@ License:        GPLv2
 URL:            https://github.com/xtaran/unburden-home-dir
 Source0:        https://github.com/xtaran/unburden-home-dir/archive/%{version}.tar.gz
 Patch0:         0001-reduced-dependancies.patch
+Patch1:         0002-no-trash-deletion-by-default.patch
 
 BuildRequires:  rubygem-ronn
 Requires:       perl-Modern-Perl
 Requires:       perl-File-BaseDir
+Requires:       perl-File-Touch
 Requires:       perl-File-Which
 
 %description
@@ -24,9 +26,9 @@ removed instead of moved.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1
+%patch1 -p1
 sed -i s/sed/#sed/ Makefile
 sed -i -e 's@/Xsession.d@/xinit/xinitrc.d@g' Makefile
-mv README.md README
 cp -R etc/ examples/
 
 %install
@@ -37,7 +39,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/default
 echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildroot}%{_sysconfdir}/default/unburden-home-dir
 
 %files
-%doc README examples/
+%doc README.md examples/
 %license COPYING
 %{_sysconfdir}/X11/xinit/xinitrc.d/25unburden-home-dir-xdg
 %{_sysconfdir}/X11/xinit/xinitrc.d/95unburden-home-dir
@@ -49,6 +51,9 @@ echo -e "#Enable unburden-home-dir XSession login\nUNBURDEN_HOME=yes" > %{buildr
 %{_datadir}/unburden-home-dir/common.sh
 
 %changelog
+* Sun Jan  9 2017 Ian Firns <firnsy@kororaproject.org> - 0.4.0.1-3
+- Fixed missing dep and don't remove .Trash in default configuration.
+
 * Sun Dec 18 2016 Ian Firns <firnsy@kororaproject.org> - 0.4.0.1-2
 - Fixed missing String::Expand utilities.
 
